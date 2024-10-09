@@ -1,9 +1,9 @@
 package com.elo7.space_probe.ui.probeMovement;
 
 
-public class ProbeMovementException extends Exception {
+public class ProbeMovementInputException extends Exception {
 
-  public ProbeMovementException(String message){
+  public ProbeMovementInputException(String message){
      super(message);
   }
 
