@@ -13,6 +13,9 @@ public record ProbeCreateDTO(
         @JsonProperty("y")
         @NotNull(message = "Probe y can't be null")
         Integer y,
+        @JsonProperty("direction")
+        @NotNull(message = "Probe direction can't be null")
+        String direction,
         @JsonProperty("planet_id")
         @NotNull(message = "Probe planet_id can't be null")
         Integer planetId

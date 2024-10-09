@@ -1,7 +1,16 @@
 package com.elo7.space_probe.domain;
 
-import jakarta.persistence.*;
-import jakarta.validation.constraints.NotNull;
+import jakarta.persistence.Column;
+import jakarta.persistence.Embedded;
+import jakarta.persistence.Entity;
+import jakarta.persistence.FetchType;
+import jakarta.persistence.GeneratedValue;
+import jakarta.persistence.GenerationType;
+import jakarta.persistence.Id;
+import jakarta.persistence.JoinColumn;
+import jakarta.persistence.ManyToOne;
+import jakarta.persistence.Table;
+import jakarta.validation.constraints.Pattern;
 
 @Entity
 @Table(name = "module")
@@ -13,6 +22,9 @@ public class Probe {
     @Column(name = "name", nullable = false)
     private String name;
 
+    @Pattern(regexp="[S|W|E|N]{1}") 
+    private String direction;
+
     @Embedded
     private Position position;
 
@@ -23,9 +35,10 @@ public class Probe {
     @Deprecated // hibernate only
     public Probe() {}
 
-    public Probe(String name, Integer x, Integer y, Planet planet) {
+    public Probe(String name, Integer x, Integer y, String direction, Planet planet) {
         this.name = name;
         this.position = new Position(x, y);
+        this.direction = direction;
         this.planet = planet;
     }
 
@@ -35,6 +48,14 @@ public class Probe {
 
     public String getName() {
         return name;
+    }
+
+    public String getDirection(){
+        return direction;
+    }
+
+    public void setDirection(String direction){
+        this.direction = direction;
     }
 
     public Integer getXPosition() {
@@ -48,4 +69,10 @@ public class Probe {
     public Integer getPlanetId() {
         return planet.getId();
     }
+
+
+    public void setPosition(Integer x, Integer y) {
+        this.position = new Position(x,y);
+    }
+
 }

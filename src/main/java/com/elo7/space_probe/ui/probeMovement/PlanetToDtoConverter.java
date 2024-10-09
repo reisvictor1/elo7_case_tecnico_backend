@@ -1,6 +1,7 @@
-package com.elo7.space_probe.ui.planets;
+package com.elo7.space_probe.ui.probeMovement;
 
 import com.elo7.space_probe.domain.Planet;
+import com.elo7.space_probe.ui.planets.PlanetDTO;
 import org.springframework.stereotype.Component;
 
 @Component
