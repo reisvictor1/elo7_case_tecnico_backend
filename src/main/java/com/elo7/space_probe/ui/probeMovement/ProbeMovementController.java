@@ -19,7 +19,6 @@ import com.elo7.space_probe.ui.GlobalExceptionHandler;
 import com.elo7.space_probe.app.probeMovement.UpdateProbePositionService;
 
 import java.util.List;
-import javafx.util.Pair;
 
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
@@ -50,7 +49,7 @@ class ProbeMovementController {
 
   @ResponseStatus(HttpStatus.OK)
   @PutMapping("/{id}")
-  ProbeDTO update(@PathVariable("id") Integer id, @RequestBody ProbeMovementDTO probeMovementDTO) throws ProbeMovementInputException{
+  ProbeDTO update(@PathVariable("id") Integer id, @RequestBody ProbeMovementDTO probeMovementDTO) {
     
     char[] moves = probeMovementDTO.move().toCharArray();
     Probe probe = findProbeService.execute(id).orElse(null);
