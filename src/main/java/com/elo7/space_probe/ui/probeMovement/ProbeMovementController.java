@@ -26,15 +26,13 @@ import com.elo7.space_probe.ui.planets.PlanetDTO;
 class ProbeMovementController {
   private final FindProbeService findProbeService;
   private final FindPlanetService findPlanetService;
-  private final ProbeToDtoConverter probeToDtoConverter;
-  private final PlanetToDtoConverter planetToDtoConverter;
+  private final ProbeMovementToDtoConverter probeMovementToDtoConverter;
   private final UpdateProbePositionService updateProbePositionService;
 
-  ProbeMovementController(FindProbeService findProbeService, FindPlanetService findPlanetService, ProbeToDtoConverter probeToDtoConverter, PlanetToDtoConverter planetToDtoConverter, UpdateProbePositionService updateProbePositionService) {
+  ProbeMovementController(FindProbeService findProbeService, FindPlanetService findPlanetService, ProbeMovementToDtoConverter probeMovementToDtoConverter, UpdateProbePositionService updateProbePositionService) {
     this.findProbeService = findProbeService;
     this.findPlanetService = findPlanetService;
-    this.probeToDtoConverter = probeToDtoConverter;
-    this.planetToDtoConverter = planetToDtoConverter;
+    this.probeMovementToDtoConverter = probeMovementToDtoConverter;
     this.updateProbePositionService = updateProbePositionService;
   }
 
@@ -42,7 +40,7 @@ class ProbeMovementController {
   @PutMapping("/{id}")
   ProbeDTO update(@PathVariable("id") Integer id, @RequestBody ProbeMovementDTO probeMovementDTO){
     Probe probe = findProbeService.execute(id).orElse(null);
-    PlanetDTO planet = findPlanetService.execute(probe.getPlanetId()).map(planetToDtoConverter::convert).orElse(null);
+    PlanetDTO planet = findPlanetService.execute(probe.getPlanetId()).map(probeMovementToDtoConverter::convertPlanet).orElse(null);
 
     Integer x = probe.getXPosition();
     Integer y = probe.getYPosition();
@@ -119,7 +117,7 @@ class ProbeMovementController {
     probe.setDirection(probe_direction);
     probe.setPosition(x, y);
     Probe probeUpdated = updateProbePositionService.execute(probe);
-    return probeToDtoConverter.convert(probeUpdated);
+    return probeMovementToDtoConverter.convertProbe(probeUpdated);
   }
   
 
