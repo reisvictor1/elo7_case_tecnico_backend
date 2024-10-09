@@ -19,6 +19,7 @@ import com.elo7.space_probe.ui.GlobalExceptionHandler;
 import com.elo7.space_probe.app.probeMovement.UpdateProbePositionService;
 
 import java.util.List;
+import javafx.util.Pair;
 
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
@@ -65,8 +66,6 @@ class ProbeMovementController {
     Integer planet_x_size = planet.width();
     Integer planet_y_size = planet.height();
 
-    
-
     for (int i = 0; i < moves.length; i++) {
       switch (probe_direction) {
           case "N" -> {
@@ -79,6 +78,8 @@ class ProbeMovementController {
                   }
                  
                   x = x - 1;
+                } else {
+                  throw new ProbeMovementInputException("Probe out of bounds");
                 }
               }
               case 'L' -> {
@@ -100,7 +101,9 @@ class ProbeMovementController {
                     if(temp_probe.y() == y - 1) throw new ProbeMovementInputException("Probe Collision");
                   }
                   y = y - 1;
-                } 
+                } else {
+                  throw new ProbeMovementInputException("Probe out of bounds");
+                }
               }
               case 'L' -> {
                 probe_direction = "S";
@@ -122,7 +125,9 @@ class ProbeMovementController {
                     if(temp_probe.x() == x + 1) throw new ProbeMovementInputException("Probe Collision");
                   }
                   x = x + 1;
-                }  
+                } else {
+                  throw new ProbeMovementInputException("Probe out of bounds");
+                }
               }
               case 'L' -> {
                 probe_direction = "S";
@@ -144,7 +149,9 @@ class ProbeMovementController {
                     if(temp_probe.y() == y + 1) throw new ProbeMovementInputException("Probe Collision");
                   }
                   y = y + 1;
-                } 
+                } else {
+                  throw new ProbeMovementInputException("Probe out of bounds");
+                }
               }
               case 'L' -> {
                 probe_direction = "N";
