@@ -1,0 +1,143 @@
+package com.elo7.space_probe.ui;
+
+import org.json.JSONException;
+import org.json.JSONObject;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
+import org.mockito.Mock;
+import org.mockito.Mockito;
+import org.mockito.junit.jupiter.MockitoExtension;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.annotation.Bean;
+import org.springframework.http.MediaType;
+import org.springframework.test.web.servlet.MockMvc;
+import org.springframework.test.web.servlet.request.MockHttpServletRequestBuilder;
+import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
+import org.springframework.test.web.servlet.result.MockMvcResultMatchers;
+import org.springframework.test.web.servlet.setup.MockMvcBuilders;
+import org.springframework.web.context.WebApplicationContext;
+
+import com.elo7.space_probe.ui.planets.PlanetDTO;
+import com.elo7.space_probe.ui.probes.ProbeDTO;
+import com.fasterxml.jackson.annotation.JsonAutoDetect.Visibility;
+import com.fasterxml.jackson.annotation.PropertyAccessor;
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.ObjectMapper;
+
+@ExtendWith(MockitoExtension.class)
+class ProbeMovementTest {
+
+    @Autowired
+    private WebApplicationContext webApplicationContext;
+    private MockMvc mockMvc;
+    
+    @BeforeEach
+    public void beforeEach() {
+        this.mockMvc = MockMvcBuilders.webAppContextSetup(this.webApplicationContext).build();
+    }
+   
+    @Bean
+    public ObjectMapper objectMapper() {
+            return new ObjectMapper();
+    }  
+
+    @Mock
+    private ProbeDTO dummyProbe;
+
+    @Mock
+    private ProbeDTO dummyProbe2;
+
+    @Mock
+    private PlanetDTO dummyPlanet;
+
+    @Test
+    void testExample() {
+        Mockito.when(dummyProbe.name()).thenReturn("banana");
+
+        assertEquals("banana", dummyProbe.name());
+    }
+
+    @Test
+    void testCollision() throws JSONException, JsonProcessingException, Exception {
+      ObjectMapper om = new ObjectMapper();
+      om.setVisibility(PropertyAccessor.FIELD, Visibility.ANY);
+
+
+      long probeOneId = 1;
+      long probeTwoId = 1;
+      long planetId = 1;
+
+      // define planet
+      Mockito.when(dummyPlanet.id()).thenReturn(planetId);
+      Mockito.when(dummyPlanet.width()).thenReturn(4);
+      Mockito.when(dummyPlanet.height()).thenReturn(4);
+
+      // define probe 1
+      Mockito.when(dummyProbe.id()).thenReturn(probeId);
+      Mockito.when(dummyProbe.direction()).thenReturn("W");
+      Mockito.when(dummyProbe.x()).thenReturn(2);
+      Mockito.when(dummyProbe.y()).thenReturn(2);
+      Mockito.when(dummyProbe.planetId()).thenReturn(1);
+
+      // define probe 2
+      Mockito.when(dummyProbe2.id()).thenReturn(probeId);
+      Mockito.when(dummyProbe2.direction()).thenReturn("N");
+      Mockito.when(dummyProbe2.x()).thenReturn(3);
+      Mockito.when(dummyProbe2.y()).thenReturn(2);
+      Mockito.when(dummyProbe2.planetId()).thenReturn(1);
+
+      String jsonString = "{\"move\": \"MM\"}";
+      JSONObject body = new JSONObject(jsonString);
+
+      MockHttpServletRequestBuilder builder = MockMvcRequestBuilders
+        .put("/v1/movement/" + probeId)
+        .contentType(MediaType.APPLICATION_JSON)
+        .content(om.writeValueAsString(body));
+
+      this.mockMvc.perform(builder)
+        .andExpect(MockMvcResultMatchers.status().isBadRequest())
+        .andExpect(MockMvcResultMatchers.content().string("Probe out of bounds"));
+
+    }
+
+    @Test
+    void testBounds() throws JSONException, JsonProcessingException, Exception {
+
+
+        ObjectMapper om = new ObjectMapper();
+        om.setVisibility(PropertyAccessor.FIELD, Visibility.ANY);
+
+
+        long probeId = 1;
+        long planetId = 1;
+
+        // define planet
+        Mockito.when(dummyPlanet.id()).thenReturn(planetId);
+        Mockito.when(dummyPlanet.width()).thenReturn(4);
+        Mockito.when(dummyPlanet.height()).thenReturn(4);
+
+        // define probe
+        Mockito.when(dummyProbe.id()).thenReturn(probeId);
+        Mockito.when(dummyProbe.direction()).thenReturn("W");
+        Mockito.when(dummyProbe.x()).thenReturn(2);
+        Mockito.when(dummyProbe.y()).thenReturn(2);
+        Mockito.when(dummyProbe.planetId()).thenReturn(1);
+
+        String jsonString = "{\"move\": \"MMM\"}";
+        JSONObject body = new JSONObject(jsonString);
+
+        MockHttpServletRequestBuilder builder = MockMvcRequestBuilders
+            .put("/v1/movement/" + probeId)
+            .contentType(MediaType.APPLICATION_JSON)
+            .content(om.writeValueAsString(body));
+
+        this.mockMvc.perform(builder)
+            .andExpect(MockMvcResultMatchers.status().isBadRequest())
+            .andExpect(MockMvcResultMatchers.content().string("Probe Collision"));
+
+
+    }
+
+}
