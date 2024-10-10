@@ -1,32 +1,23 @@
 package com.elo7.space_probe.ui.probeMovement;
 
-import java.util.ArrayList;
-
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
-
-import com.elo7.space_probe.domain.Probe;
-import com.elo7.space_probe.domain.Planet;
-import com.elo7.space_probe.ui.probes.ProbeDTO;
-import com.elo7.space_probe.ui.planets.PlanetDTO;
-import com.elo7.space_probe.app.planets.FindPlanetService;
-import com.elo7.space_probe.app.probes.FindAllProbeService;
-import com.elo7.space_probe.app.probes.FindProbeService;
-import com.elo7.space_probe.ui.ErrorMessageDTO;
-import com.elo7.space_probe.ui.probeMovement.ProbeMovementInputException;
-import com.elo7.space_probe.ui.GlobalExceptionHandler;
-
-import com.elo7.space_probe.app.probeMovement.UpdateProbePositionService;
-
 import java.util.List;
 
 import org.springframework.http.HttpStatus;
-import org.springframework.web.bind.annotation.*;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PutMapping;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.ResponseStatus;
+import org.springframework.web.bind.annotation.RestController;
 
-import java.util.Optional;
-import java.util.stream.Collectors;
-
+import com.elo7.space_probe.app.planets.FindPlanetService;
+import com.elo7.space_probe.app.probeMovement.UpdateProbePositionService;
+import com.elo7.space_probe.app.probes.FindAllProbeService;
+import com.elo7.space_probe.app.probes.FindProbeService;
+import com.elo7.space_probe.domain.Probe;
+import com.elo7.space_probe.ui.GlobalExceptionHandler;
 import com.elo7.space_probe.ui.planets.PlanetDTO;
+import com.elo7.space_probe.ui.probes.ProbeDTO;
 
 @RestController
 @RequestMapping("v1/movement")
@@ -129,11 +120,11 @@ class ProbeMovementController {
                 }
               }
               case 'L' -> {
-                probe_direction = "S";
+                probe_direction = "E";
               }
 
               case 'R' -> {
-                probe_direction = "N";
+                probe_direction = "W";
               }
               default -> throw new ProbeMovementInputException("Invalid Move");
             }
